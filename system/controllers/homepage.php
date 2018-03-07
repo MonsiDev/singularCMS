@@ -5,14 +5,13 @@
 
   class my_homepage extends cController {
 
-    function __construct() {
-
+    function __construct($name) {
+      parent::__construct();
+      $this->model = $this->loadModel($name);
     }
 
     public function index($params) {
-      global $cTemplate;
-      $cTemplate->assign('d', '')
-                ->header()
+      $this->tmp->header()
                 ->temp('homepage')
                 ->footer()
                 ->render();

@@ -4,6 +4,10 @@
       'controller' => 'homepage',
       'action' => 'index'
     ],
+    "/^(home)$/i" => [
+      'controller' => 'home',
+      'action' => 'index'
+    ],
     "/^((rental)|(rupal)|(sale))$/i" => [
       'controller' => 'type',
       'action' => 'index'
