@@ -13,28 +13,32 @@
     public $email = '';
     public $avatar = '';
     public $nickname = '';
+    public $is_auth = false;
 
     function __construct() {
       if($this->getSession('id')) {
         if($this->getSession('remote_addr') != $_SERVER['REMOTE_ADDR']
           && $this->getSession('user_agent') != $_SERVER['HTTP_USER_AGENT']) {
           $this->unsetSession();
-        }
-        $user = $this->getUser([
-          'user_id' => $this->getSession('id'),
-          'user_delete' => false
-        ]);
+        } else {
+          $user = $this->getUser([
+            'user_id' => $this->getSession('id'),
+            'user_delete' => false
+          ]);
 
-        if($user === false) {
-          $this->unsetSession();
+          if($user === false) {
+            $this->unsetSession();
+          } else {
+            $this->id = $user['user_id'];
+            $this->name = $user['user_name'];
+            $this->gid = $user['user_gid'];
+            $this->phone = $user['user_phone'];
+            $this->email = $user['user_mail'];
+            $this->avatar = $user['user_photo'];
+            $this->nickname = $user['user_nickname'];
+            $this->is_auth = true;
+          }
         }
-        $this->id = $user['user_id'];
-        $this->name = $user['user_name'];
-        $this->gid = $user['user_gid'];
-        $this->phone = $user['user_phone'];
-        $this->email = $user['user_email'];
-        $this->avatar = $user['user_photo'];
-        $this->nickname = $user['user_nickname'];
       }
     }
 
@@ -51,22 +55,30 @@
     }
 
     public function setSession($key, $val) {
-      $_SESSION['USER'][$key] = $val;
+      if(is_array($key)) {
+        foreach($key as $k => $v) {
+          $_SESSION['USER'][$k] = $v;
+        }
+      } else {
+        $_SESSION['USER'][$key] = $val;
+      }
     }
 
-    public function authUser($name, $pass) {
-      $user = $this->getUser(['name' => $name]);
+    public function authUser($name, $pass, $redirect = '/home') {
+      global $cHttp;
+      $name = strtolower($name);
+      $user = $this->getUser(['user_name' => $name]);
       if($user !== false) {
         if($this->validPass($user['user_password'], [
             'login' => $name,
-            'password' => $password
+            'password' => $pass
           ])) {
           $this->setSession([
             'id' => $user['user_id'],
             'remote_addr' => $_SERVER['REMOTE_ADDR'],
             'user_agent' => $_SERVER['HTTP_USER_AGENT']
           ]);
-          header('Location: /home');
+          $cHttp->redirect($redirect);
           return true;
         }
       }
@@ -88,6 +100,7 @@
     }
 
     public function hashPass($login, $pass) {
+      $login = strtolower($login);
       $len = strlen($login);
       $bonding = implode([
         md5($login . md5($pass . $pass[PI() / $len])),

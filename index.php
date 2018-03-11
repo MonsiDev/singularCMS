@@ -27,8 +27,8 @@
   $cHttp = cHttp::getInstance();
   $cTemplate = cTemplate::getInstance();
 
-  $cRoute->rules = require_once(BASEPATH . '/system/route_rules.php');
   $cHttp->sendHeader();
+  $cRoute->rules = require_once(BASEPATH . '/system/route_rules.php');
   $cRoute->run();
 
   ob_end_flush();

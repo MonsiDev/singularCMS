@@ -25,6 +25,9 @@
         $this->model
             ->http->error404();
       }
+      if(isAjax() === true) {
+        jsonSend($object);
+      }
       $this->title = $object->title;
       $this->tmp->siteTitle($object->object_title)
                 ->assign('permalink', $this->model->permalink)

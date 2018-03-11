@@ -27,7 +27,7 @@
       $this->id = $data['type_id'];
     }
 
-    public function getObjects($beginLimit) {
+    public function getObjects($beginLimit = 0) {
       $sql = 'SELECT * FROM `cms_object` LEFT JOIN `cms_album` ON `album_id` = `object_album` INNER JOIN `cms_users` ON `user_id` = `object_user` WHERE `object_type` = :object_type LIMIT ' . $beginLimit . ', 10';
       $objects = $this->getData($sql, [
         'object_type' => $this->id

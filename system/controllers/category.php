@@ -11,14 +11,17 @@
     }
 
     public function index($params) {
-      $objects = $this->model->getObjects();
+      $objects = $this->model->getObjects(0);
       if($objects === false) {
         $this->model
             ->http
             ->error404();
       }
+      if(isAjax() === true) {
+        jsonSend($objects);
+      }
       $this->tmp->siteTitle($this->model->title)
-                ->assign('MODEL_TITLE', $this->model->title)
+                ->assign('CATEGORY_TITLE', $this->model->title)
                 ->assign('objects', $objects)
                 ->header()
                 ->temp('category')

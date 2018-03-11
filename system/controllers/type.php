@@ -19,8 +19,11 @@
         $this->model
              ->http->error404();
       }
+      if(isAjax() === true) {
+        jsonSend($objects);
+      }
       $this->tmp->siteTitle($this->model->title)
-                ->assign('MODEL_TITLE', $this->model->title)
+                ->assign('TYPE_TITLE', $this->model->title)
                 ->assign('objects', $objects)
                 ->header()
                 ->temp('type')

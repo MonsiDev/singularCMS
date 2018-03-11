@@ -72,8 +72,8 @@
       return false;
     }
 
-    public function getObjects() {
-      $sql = 'SELECT * FROM `cms_object` LEFT JOIN `cms_album` ON `album_id` = object_album INNER JOIN `cms_users` ON `user_id` = object_user WHERE `object_category` IN (' . implode($this->nodes_id, ',') . ') AND `object_type` = :object_type';
+    public function getObjects($startLimit = 0) {
+      $sql = 'SELECT * FROM `cms_object` LEFT JOIN `cms_album` ON `album_id` = object_album INNER JOIN `cms_users` ON `user_id` = object_user WHERE `object_category` IN (' . implode($this->nodes_id, ',') . ') AND `object_type` = :object_type LIMIT ' . $startLimit . ',10';
       $objects = $this->getData($sql, [
         'object_type' => $this->type_id
       ]);

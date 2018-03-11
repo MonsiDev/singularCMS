@@ -22,6 +22,14 @@
       header('X-Powered-By:' . $_SERVER['HTTP_HOST']);
     }
 
+    public function redirect($url = '/', $code = 301) {
+      header("location: {$url}", true, $code);
+    }
+
+    public function upload_img($preview = false) {
+      
+    }
+
     public function error404() {
       global $cTemplate;
       ob_end_clean();

@@ -19,19 +19,27 @@
 
     public function assign($key, $val = false) {
       if(is_array($key) == true) {
-        $this->vars[] = $key;
+        foreach($key as $k => $v) {
+          if(is_array($v)) {
+            $this->vars[$k] = (object)$v;
+          } else {
+            $this->vars[$k] = $v;
+          }
+        }
         return $this;
       }
       $this->vars[$key] = $val;
       return $this;
     }
 
-    public function header() {
-      return $this->temp('assets/header');
+    public function header($root = '') {
+      $path = trim($root . '/assets/header', '/');
+      return $this->temp($path);
     }
 
-    public function footer() {
-      return $this->temp('assets/footer');
+    public function footer($root = '') {
+      $path = trim($root . '/assets/footer', '/');
+      return $this->temp($path);
     }
 
     public function render_temp($name, $vars = []) {
